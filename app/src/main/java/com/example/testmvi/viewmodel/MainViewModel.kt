@@ -2,23 +2,38 @@ package com.example.testmvi.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.testmvi.data.model.User
 import com.example.testmvi.intent.MainIntent
-import com.example.testmvi.data.repository.MainRepository
+import com.example.testmvi.intent.GetUserInteractor
+import com.example.testmvi.intent.UserView
 import com.example.testmvi.viewstate.MainState
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
-@ExperimentalCoroutinesApi
-class MainViewModel(private val repository: MainRepository ) :
-    ViewModel()
+
+
+
+class MainViewModel(
+    private val getUserInteractor: GetUserInteractor,
+    ) : ViewModel(), UserView
 {
-    val userIntent = Channel<MainIntent>(Channel.UNLIMITED)
-    private val _state = MutableStateFlow<MainState>(MainState.Idle)
-    val state: StateFlow<MainState> get() = _state
+
+    val userIntent = MainIntent.FetchUser
+
+    private val loading: PublishSubject<Boolean>? = null
+    private val persons: PublishSubject<List<User>>? = null
+    private val loadpersonsCommand: PublishSubject<List<User>>? = null
+
+
+
+
+
+
+    fun search() {
+        getUserInteractor.getUser()
+    }
+
     init {
         handleIntent()
     }
@@ -33,14 +48,14 @@ class MainViewModel(private val repository: MainRepository ) :
     }
     private fun fetchUser()
     {
-        viewModelScope.launch {
-            _state.value = MainState.Loading
-            _state.value = try {
-                MainState.Users(repository.getUsers())
-            } catch (e: Exception) {
-                MainState.Error(e.localizedMessage)
-            }
-        }
+        search()
+    }
+
+    override fun searchIntent(): Observable<String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun render(mainState: MainState?) {
 
     }
 }

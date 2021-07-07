@@ -17,6 +17,7 @@ class MainAdapter(private val users: ArrayList<User> ) : RecyclerView.Adapter<Ma
         fun bind(user: User)
         {
             itemView.textViewUserName.text = user.name
+            itemView.textViewUserName.text = user.lastname
             itemView.textViewUserEmail.text = user.email
             Glide.with(itemView.imageViewAvatar.context)
                 .load(user.avatar)

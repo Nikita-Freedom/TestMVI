@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), UserView {
     private lateinit var mainViewModel: MainViewModel
     private var adapter = MainAdapter(arrayListOf())
     override fun onCreate(savedInstanceState: Bundle?)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     {
         buttonFetchUser.setOnClickListener {
             lifecycleScope.launch {
-                mainViewModel.userIntent.send(MainIntent.FetchUser)
+                mainViewModel.userIntent.send(MainIntent.FetchUser) // Отправляем нажатие пользователя через intetn нашему MainViewModel
             }
 
         }
